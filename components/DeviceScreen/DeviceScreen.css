@@ -1,0 +1,41 @@
+.root {
+
+}
+
+.container {
+  margin: 0 auto;
+  width: 640px;
+  height: 480px;
+}
+
+.display {
+  margin-top:20px;
+  padding-left: 136px;
+  padding-top: 64px;
+}
+
+.glass, .view {
+  width:320px;
+  height:240px;
+}
+
+.view {
+}
+
+.glass {
+  margin-top: -240px;
+  position: relative;
+  background-color: rgba(255,255,255,0.75);
+  filter: blur(5px);
+  display:none;
+}
+
+
+.background {
+  background: transparent url("./brewpi-spark.jpg");
+  background-repeat: no-repeat;
+  background-size:calc(517px*1.117) calc(345px*1.117);
+  width: 800px;
+  height: 600px;
+}
+

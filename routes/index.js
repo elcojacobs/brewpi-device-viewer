@@ -11,6 +11,7 @@
 import home from './home';
 import about from './about';
 import error from './error';
+import device from './device';
 
 const routes = {
 
@@ -18,6 +19,7 @@ const routes = {
 
   children: [
     home,
+    device,
     about,
     error,
   ],

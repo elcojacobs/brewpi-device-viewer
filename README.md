@@ -1,3 +1,62 @@
+# Remote Display
+
+## Setup
+
+### Cross Compile Firmware
+
+Check out the feature/cross-compile branch from brewpi firmware
+
+```
+cd platform/spark
+make APP=controller PLATFORM=gcc -s 
+cd target/controller-gcc
+
+touch eeprom.bin
+```
+
+### Buid this app
+
+This React static app reqiures node 6.0.0. 
+
+Install `nvm` if not already done to manage node versions.
+```
+nvm install 6.0.0
+nvm use 6.0.0
+```
+
+And then:
+
+```
+npm install 
+npm start
+```
+
+### Try the app
+
+If `npm start` didn't bring up your browser, go to `http://localhost:3000/device`.
+
+*NB:* Currently there's a cosmetic issue with Chrome - it doesn't render the background image, 
+so use IE or Safari. 
+
+- On starting the app you'll see an image of an unpowered Brewpi controller
+- in the firmware repo, run `./controller`, this will start up a virtual controller
+- switch back to the browser - the deivce will show the screen from the controller
+
+
+
+## TOOD
+
+- [ ] background image doesn't render on Chrome
+- [ ] Persist touch calibration to eeprom
+- [ ] command ID in message to distinguish commands:
+ - [ ] describe: describes screen size and pixel format
+ - [ ] pixel spread: (address, color) array of pixels. 
+
+- [x] Emulate touch screen
+  
+
+
+
 # React Static Boilerplate
 
 [![NPM version](http://img.shields.io/npm/v/generator-react-static.svg?style=flat-square)](https://www.npmjs.com/package/generator-react-static)

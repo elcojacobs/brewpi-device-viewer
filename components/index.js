@@ -10,3 +10,4 @@
 
 export Content from './content/Content';
 export Layout from './layout/Layout';
+export DeviceScreen from './DeviceScreen/';

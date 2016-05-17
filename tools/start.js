@@ -62,6 +62,7 @@ task('start', () => new Promise(resolve => {
     files: [
       'build/**/*.css',
       'build/**/*.html',
+      'build/**/*.jpg'
     ],
   });
 
