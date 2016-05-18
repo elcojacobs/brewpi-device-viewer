@@ -31,9 +31,14 @@ const config = {
   // Options affecting the output of the compilation
   output: {
     path: path.resolve(__dirname, '../build'),
-    publicPath: '/',
+    // specifying the public path is necessary so that url() references can be used in CSS
+    // with style maps
+    // https://github.com/gryzzly/style-loader/commit/42060ee921a8cc705193d70c80de791526ecf358
+
+    publicPath: 'http://localhost:3000/',
     file: 'build/[name].js',
     sourcePrefix: '  ',
+
   },
 
   // Switch loaders to debug or release mode
