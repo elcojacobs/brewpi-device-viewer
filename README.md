@@ -24,7 +24,7 @@ nvm install 6.0.0
 nvm use 6.0.0
 ```
 
-And then:
+And then (from within the repo directory):
 
 ```
 npm install 
@@ -33,18 +33,18 @@ npm start
 
 ### Try the app
 
-If `npm start` didn't bring up your browser, go to `http://localhost:3000/device`.
+Browse to `http://localhost:3000/device`.
 
 - On starting the app you'll see an image of an unpowered Brewpi controller
-- in the firmware repo, run `./controller`, this will start up a virtual controller
-- switch back to the browser - the deivce will show the screen from the controller
+- in the firmware repo, run `./controller` from the gcc build, this will start up a virtual controller
+- switch back to the browser - the device will show the screen from the controller
 
 
 
 ## TOOD
 
 - [x] background image doesn't render on Chrome
-- [ ] investigate why buttons on test page don't work. ]
+- [ ] investigate why buttons on test page don't work.
 - [ ] website must be hosted at http://localhost:3000
 - [ ] Persist touch calibration to eeprom
 - [ ] command ID in message to distinguish commands:
