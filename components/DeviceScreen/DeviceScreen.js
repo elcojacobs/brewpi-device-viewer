@@ -30,7 +30,8 @@ export default class DeviceScreen extends Component {
       imagedata: undefined,
       connecting: undefined,
       connected: undefined,
-    }
+    };
+    this.pressed = 0;
   }
 
 	/**
@@ -41,7 +42,6 @@ export default class DeviceScreen extends Component {
     this.preventReconnection = false;
   }
 
-
    getMousePos = (element, evt) => {
     const rect = element.getBoundingClientRect();
     return {
@@ -50,22 +50,43 @@ export default class DeviceScreen extends Component {
     };
   };
 
-  clicked = (evt) => {
-    const {x, y} = this.getMousePos(this.canvas, evt);
-    this.log(`clicked ${x},${y}`);
-    this.touchscreen(x,y);
+  mousedown = (evt) => {
+      this.log(`mousedown ${evt} ${evt.button}`);
+      if (evt.button===0) {
+        this.pressed++;
+        this.touchscreen(evt);
+      }
   };
 
-  touchscreen(x, y) {
-    const ws = this.ws;
-    if (ws) {
+  mouseup = (evt) => {
+    this.log(`mousedup ${evt} ${evt.button}`);
+    if (evt.button===0) {
+      this.pressed--;
+      this.touchscreen(evt);
+    }
+  };
+
+  mousemove = (evt) => {
+    // send events only when pressed.
+    if (this.pressed>0) {
+      this.touchscreen(evt);
+    }
+  };
+
+  touchscreen(evt) {
+    const {x, y} = this.getMousePos(this.canvas, evt);
+    const connected = this.state.connected;
+    if (connected) {
+      this.log(`sending touch ${x},${y},${this.pressed}`);
       const buf = new ArrayBuffer(5);
       const view = new DataView(buf);
-      view.setInt8(0, 1);    // command
+      view.setInt8(0, this.pressed ? 1 : 2);    // command
       view.setUint16(1, x, true);
       view.setUint16(3, y, true);
-      ws.send(buf);
+      this.ws.send(buf);
     }
+    else
+      this.log('no touch event sent - not connected');
   }
 
 	/**
@@ -74,7 +95,10 @@ export default class DeviceScreen extends Component {
   componentDidMount() {
     this.canvas = ReactDOM.findDOMNode(this.refs.canvas);
     if (this.canvas) {
-      this.canvas.addEventListener('click', this.clicked);
+      this.canvas.addEventListener('mousedown', this.mousedown);
+      this.canvas.addEventListener('mouseup', this.mouseup);
+      this.canvas.addEventListener('mousemove', this.mousemove);
+//      this.canvas.addEventListener('click', this.clicked);
       this.ctx = this.canvas.getContext('2d');
 
       this.imagedata = this.ctx.getImageData(0, 0, this.props.width, this.props.height);
@@ -179,7 +203,7 @@ export default class DeviceScreen extends Component {
     if (this.imagedata!==undefined) {
       const img = this.imagedata.data;
       let index = 0;
-      let s = "";
+      // let s = "";
       while (index < length) {
         const base = buffer.getUint32(index, true);
         const color = buffer.getUint32(index + 4, true);
@@ -195,7 +219,7 @@ export default class DeviceScreen extends Component {
         const g = (gg << 2) | ((gg >>> 3) & 3);
         const b = (bb << 3) | ((bb >>> 2) & 7);
 
-        s += `(${x},${y}:${color}:${r},${g},${b}) `;
+        // s += `(${x},${y}:${color}:${r},${g},${b}) `;
 
         img[addr] = r;
         img[addr+1] = g;
@@ -211,7 +235,7 @@ export default class DeviceScreen extends Component {
   render() {
 
     const connected = this.state.connected;
-
+    const connecting = this.state.connecting;
     const canvas =
       <div className={s.container}>
         <div className={s.background}>
@@ -220,7 +244,7 @@ export default class DeviceScreen extends Component {
                     style={{visibility: connected ? 'visible' : 'hidden'}}
                     className={s.view} width={this.props.width} height={this.props.height}/>
             <div className={s.glass}
-                 style={{visibility: !connected ? 'visible' : 'visible'}}
+                 style={{visibility: connecting ? 'visible' : 'hidden'}}
                  width={this.props.width} height={this.props.height}>
             </div>
           </div>
